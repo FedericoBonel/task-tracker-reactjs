@@ -59,18 +59,18 @@ body {
   width: 100%;
 }
 
-.event {
+.task {
   background: #f4f4f4;
   margin: 5px;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-.event.remainder {
+.task.reminder {
   border-left: 5px solid green;
 }
 
-.event h3 {
+.task h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
