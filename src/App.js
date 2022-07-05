@@ -1,8 +1,12 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
+import Footer from "./components/Footer";
+import About from "./components/About"
 
 const App = () => {
   // State for knowing when to render add form
@@ -88,23 +92,36 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      <Header
-        title="Task Tracker"
-        onAdd={() => setRenderAddForm(!renderAddForm)}
-        renderAddForm={renderAddForm}
-      />
-      {renderAddForm && <AddTask onSubmission={addTask} />}
-      {tasks.length > 0 ? (
-        <Tasks
-          tasks={tasks}
-          onDelete={deleteTaskById}
-          onToggle={toggleRemainderById}
+    <Router>
+      <div className="container">
+        <Header
+          title="Task Tracker"
+          onAdd={() => setRenderAddForm(!renderAddForm)}
+          renderAddForm={renderAddForm}
         />
-      ) : (
-        "Nothing to show"
-      )}
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                {renderAddForm && <AddTask onSubmission={addTask} />}
+                {tasks.length > 0 ? (
+                  <Tasks
+                    tasks={tasks}
+                    onDelete={deleteTaskById}
+                    onToggle={toggleRemainderById}
+                  />
+                ) : (
+                  "Nothing to show"
+                )}
+              </>
+            }
+          />
+          <Route path='/about' element={<About />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 };
 
