@@ -1,10 +1,13 @@
 import Button from './Button';
 
-const Header = ({ title }) => {
+const Header = ({ title, onAdd, renderAddForm }) => {
   return (
     <header className="header">
         <h1>{title}</h1>
-        <Button textContent="Add"/>
+        <Button 
+        textContent={renderAddForm ? "Close" : "Add"}
+        color={renderAddForm ? "red" : "green"}
+        onClick={onAdd}/>
     </header>
   )
 }
