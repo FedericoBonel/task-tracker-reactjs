@@ -6,7 +6,15 @@ import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
 import Footer from "./components/Footer";
-import About from "./components/About"
+import About from "./components/About";
+
+import {
+  getAllTasks,
+  getTaskById,
+  saveTask,
+  deleteTask,
+  updateTask,
+} from "./repositories/TaskRepository";
 
 const App = () => {
   // State for knowing when to render add form
@@ -16,72 +24,36 @@ const App = () => {
 
   // Load when refreshing website
   useEffect(() => {
-    // Get all tasks
     const getTasks = async () => {
-      const serverTasks = await fetchTasks();
+      const serverTasks = await getAllTasks();
+      // Update UI
       setTasks(serverTasks);
     };
-
     getTasks();
   }, []);
 
-  // Fetch tasks from task microservice and return it as a promise
-  const fetchTasks = async () => {
-    const response = await fetch("http://localhost:8080/api/v1/task", {
-      method: "GET",
-    });
-    const data = await response.json();
-
-    return data;
-  };
-
-  // Fetch a task by id from task microservice and return it as a promise
-  const fetchTaskById = async (id) => {
-    const response = await fetch(`http://localhost:8080/api/v1/task/${id}`, {
-      method: "GET",
-    });
-    const data = await response.json();
-
-    return data;
-  };
-
   // Create task
   const addTask = async (task) => {
-    const response = await fetch("http://localhost:8080/api/v1/task", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(task),
-    });
-    const newTask = await response.json();
+    const newTask = await saveTask(task);
+
+    // Update UI
     setTasks([...tasks, newTask]);
   };
 
   // Delete task
   const deleteTaskById = async (id) => {
-    await fetch(`http://localhost:8080/api/v1/task/${id}`, {
-      method: "DELETE",
-    });
+    deleteTask(id);
 
+    // Update UI
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
   // Toggle remainder
   const toggleRemainderById = async (id) => {
-    let savedTask = await fetchTaskById(id);
+    let savedTask = await getTaskById(id);
     savedTask = { ...savedTask, reminder: !savedTask.reminder };
 
-    const response = await fetch(`http://localhost:8080/api/v1/task/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(savedTask),
-    });
-
-    const updatedTask = await response.json();
+    const updatedTask = await updateTask(id, savedTask);
 
     // Update ui
     setTasks(
@@ -117,7 +89,7 @@ const App = () => {
               </>
             }
           />
-          <Route path='/about' element={<About />} />
+          <Route path="/about" element={<About />} />
         </Routes>
         <Footer />
       </div>
