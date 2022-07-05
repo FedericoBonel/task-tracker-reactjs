@@ -14,7 +14,7 @@ import {
   saveTask,
   deleteTask,
   updateTask,
-} from "./repositories/TaskRepository";
+} from "./services/TaskService";
 
 const App = () => {
   // State for knowing when to render add form
